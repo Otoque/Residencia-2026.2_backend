@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class ChatController {
 
     @Autowired
-    private AiService openAiService;
+    private AiService aiService;
 
     @PostMapping
     public ResponseEntity<ChatResponseDTO> enviarPrompt(@RequestBody ChatRequest request) {
-        ChatResponseDTO resposta = openAiService.callChatGpt(request);
+        ChatResponseDTO resposta = aiService.callChatGpt(request);
         return ResponseEntity.ok(resposta);
     }
 }

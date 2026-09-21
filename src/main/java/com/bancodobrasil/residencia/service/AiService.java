@@ -17,7 +17,7 @@ public class AiService {
   @Value("${openai.api.key}")
   private String apiKey;
 
-  private final String OPENAI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+  private final String Ai_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 
   public ChatResponseDTO callChatGpt(ChatRequest request) {
     RestTemplate restTemplate = new RestTemplate();
@@ -30,7 +30,7 @@ public class AiService {
 
     try {
       ResponseEntity<String> responseString = restTemplate.exchange(
-          OPENAI_URL,
+          Ai_URL,
           HttpMethod.POST,
           entity,
           String.class
