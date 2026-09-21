@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: residencia
+
+openai:
+  api:
+    key: ${API_KEY_OPENAI}

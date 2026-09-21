@@ -1,0 +1,23 @@
+package com.bancodobrasil.residencia.controller;
+
+import com.bancodobrasil.residencia.model.ChatRequest;
+import com.bancodobrasil.residencia.dto.ChatResponseDTO;
+import com.bancodobrasil.residencia.service.AiService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/chat")
+@CrossOrigin(origins = "*")
+public class ChatController {
+
+    @Autowired
+    private AiService openAiService;
+
+    @PostMapping
+    public ResponseEntity<ChatResponseDTO> enviarPrompt(@RequestBody ChatRequest request) {
+        ChatResponseDTO resposta = openAiService.callChatGpt(request);
+        return ResponseEntity.ok(resposta);
+    }
+}
