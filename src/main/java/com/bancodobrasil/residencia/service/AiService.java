@@ -5,7 +5,11 @@ import com.bancodobrasil.residencia.model.ChatRequest;
 
 import tools.jackson.databind.ObjectMapper;
 
+import com.bancodobrasil.residencia.dto.ChatCustomResponseDTO;
 import com.bancodobrasil.residencia.dto.ChatResponseDTO;
+import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,13 +17,15 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AiService {
+  @Autowired
+  private EnvironmentalImpactService impactService;
 
   @Value("${openai.api.key}")
   private String apiKey;
 
   private final String Ai_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 
-  public ChatResponseDTO callChatGpt(ChatRequest request) {
+  public ChatCustomResponseDTO callChatGpt(ChatRequest request) {
     RestTemplate restTemplate = new RestTemplate();
 
     HttpHeaders headers = new HttpHeaders();
@@ -36,13 +42,17 @@ public class AiService {
           String.class
       );
 
-      System.out.println("Raw API Json: " + responseString.getBody());
       ObjectMapper objectMapper = new ObjectMapper();
       ChatResponseDTO responseDTO = objectMapper.readValue(responseString.getBody(), ChatResponseDTO.class);
-      System.out.println("Response mapped: " + responseDTO);
 
-      return responseDTO;
+      Integer totalTokens = 0;
+      if (responseDTO.getUsage() != null && responseDTO.getUsage().getTotal_tokens() != null){
+        totalTokens = responseDTO.getUsage().getTotal_tokens();
+      }
 
+      EnvironmentalImpactDTO impactDTO = impactService.calculate(totalTokens);
+
+      return new ChatCustomResponseDTO(responseDTO,impactDTO);
     } catch (HttpStatusCodeException e) {
       System.out.println("Error returned by the API (Body): " + e.getResponseBodyAsString());
       throw e;
