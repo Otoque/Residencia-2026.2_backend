@@ -20,7 +20,7 @@ public class AiService {
   @Autowired
   private EnvironmentalImpactService impactService;
 
-  @Value("${openai.api.key}")
+  @Value("${ai.api.key}")
   private String apiKey;
 
   private final String Ai_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
