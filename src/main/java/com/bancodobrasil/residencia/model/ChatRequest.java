@@ -12,9 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRequest {
-
   private String model;
   private List<Message> messages;
   private Double temperature;
-
 }

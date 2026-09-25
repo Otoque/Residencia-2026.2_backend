@@ -15,7 +15,7 @@ public class EnvironmentalImpactService {
 
     public EnvironmentalImpactDTO estimateFromPrompt(String modelName, String promptText) {
         ModelImpactStrategy strategy = strategies.stream()
-                .filter(s -> s.supports(modelName))
+                .filter(s -> s.validator(modelName))
                 .findFirst()
                 .orElseGet(() -> strategies.get(0));
 

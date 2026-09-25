@@ -4,5 +4,5 @@ import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
 
 public interface ModelImpactStrategy {
     EnvironmentalImpactDTO calculateImpact(String promptText);
-    boolean supports(String modelName);
+    boolean validator(String modelName);
 }
