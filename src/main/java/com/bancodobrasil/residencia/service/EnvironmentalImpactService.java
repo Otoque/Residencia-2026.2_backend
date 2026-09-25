@@ -1,21 +1,24 @@
 package com.bancodobrasil.residencia.service;
 
-import org.springframework.stereotype.Service;
 import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
+import com.bancodobrasil.residencia.service.agents.ModelImpactStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
-public class EnvironmentalImpactService{
+public class EnvironmentalImpactService {
 
-  public EnvironmentalImpactDTO calculate(Integer totalTokens){
-    if (totalTokens == null || totalTokens <= 0){
-      return new EnvironmentalImpactDTO(0, 0.0, 0.0, 0.0);
+    @Autowired
+    private List<ModelImpactStrategy> strategies;
+
+    public EnvironmentalImpactDTO estimateFromPrompt(String modelName, String promptText) {
+        ModelImpactStrategy strategy = strategies.stream()
+                .filter(s -> s.supports(modelName))
+                .findFirst()
+                .orElseGet(() -> strategies.get(0));
+
+        return strategy.calculateImpact(promptText);
     }
-    
-    double energyWh = totalTokens * 0.00003;
-    double carbonGrams = totalTokens * 0.00043;
-    double waterMl = totalTokens * 0.002;
-
-    return new EnvironmentalImpactDTO(totalTokens, energyWh, carbonGrams, waterMl);
-  }
 }

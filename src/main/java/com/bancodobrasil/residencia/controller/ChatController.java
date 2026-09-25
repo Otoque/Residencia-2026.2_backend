@@ -1,7 +1,7 @@
 package com.bancodobrasil.residencia.controller;
 
 import com.bancodobrasil.residencia.model.ChatRequest;
-import com.bancodobrasil.residencia.dto.ChatCustomResponseDTO;
+import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
 import com.bancodobrasil.residencia.service.AiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class ChatController {
     private AiService aiService;
 
     @PostMapping
-    public ResponseEntity<ChatCustomResponseDTO> enviarPrompt(@RequestBody ChatRequest request) {
-        ChatCustomResponseDTO resposta = aiService.callChatGpt(request);
+    public ResponseEntity<EnvironmentalImpactDTO> enviarPrompt(@RequestBody ChatRequest request) {
+        EnvironmentalImpactDTO resposta = aiService.simulateImpact(request);
         return ResponseEntity.ok(resposta);
     }
 }
