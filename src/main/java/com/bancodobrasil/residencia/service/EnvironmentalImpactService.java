@@ -1,8 +1,8 @@
 package com.bancodobrasil.residencia.service;
 
 import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
+import com.bancodobrasil.residencia.dto.usage.TokenUsageDTO;
 import com.bancodobrasil.residencia.service.agents.ModelImpactStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,15 +10,17 @@ import java.util.List;
 @Service
 public class EnvironmentalImpactService {
 
-    @Autowired
-    private List<ModelImpactStrategy> strategies;
+    private final List<ModelImpactStrategy> strategies;
 
-    public EnvironmentalImpactDTO estimateFromPrompt(String modelName, String promptText) {
-        ModelImpactStrategy strategy = strategies.stream()
-                .filter(s -> s.validator(modelName))
+    public EnvironmentalImpactService(List<ModelImpactStrategy> strategies) {
+        this.strategies = strategies;
+    }
+
+    public EnvironmentalImpactDTO calculate(String modelName, TokenUsageDTO usage) {
+        return strategies.stream()
+                .filter(s -> s.supports(modelName))
                 .findFirst()
-                .orElseGet(() -> strategies.get(0));
-
-        return strategy.calculateImpact(promptText);
+                .orElseThrow(() -> new IllegalArgumentException("Modelo não suportado: " + modelName))
+                .calculateImpact(usage);
     }
 }

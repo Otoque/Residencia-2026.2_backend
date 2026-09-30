@@ -1,30 +1,26 @@
 package com.bancodobrasil.residencia.service.agents;
 
 import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
+import com.bancodobrasil.residencia.dto.usage.TokenUsageDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GptImpactStrategy implements ModelImpactStrategy {
 
     @Override
-    public boolean validator(String modelName) {
+    public boolean supports(String modelName) {
         return modelName != null && modelName.toLowerCase().contains("gpt");
     }
 
     @Override
-    public EnvironmentalImpactDTO calculateImpact(String promptText) {
-        if (promptText == null || promptText.isEmpty()) {
-            return new EnvironmentalImpactDTO(0, 0.0, 0.0, 0.0);
-        }
+    public EnvironmentalImpactDTO calculateImpact(TokenUsageDTO usage) {
+        int total = usage.totalTokens();
 
-        int estimatedPromptTokens = (int) Math.ceil(promptText.length() / 4.0);
-        int estimatedCompletionTokens = 150;
-        int totalEstimatedTokens = estimatedPromptTokens + estimatedCompletionTokens;
+        // Troque pelos coeficientes do seu arquivo antigo de GPT
+        double energyWh = total * 0.00004;
+        double carbonGrams = energyWh * 0.00045;
+        double waterMl = total * 0.0022;
 
-        double energyWh = totalEstimatedTokens * 0.000035; 
-        double carbonGrams = energyWh * 0.00048; 
-        double waterMl = totalEstimatedTokens * 0.0022;
-
-        return new EnvironmentalImpactDTO(totalEstimatedTokens, energyWh, carbonGrams, waterMl);
+        return new EnvironmentalImpactDTO(total, energyWh, carbonGrams, waterMl);
     }
 }

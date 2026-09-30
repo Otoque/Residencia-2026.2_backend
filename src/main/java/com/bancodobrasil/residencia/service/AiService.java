@@ -1,24 +1,47 @@
 package com.bancodobrasil.residencia.service;
 
-import com.bancodobrasil.residencia.model.ChatRequest;
 import com.bancodobrasil.residencia.dto.EnvironmentalImpactDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bancodobrasil.residencia.dto.response.ChatResponseDTO;
+import com.bancodobrasil.residencia.dto.usage.TokenUsageDTO;
+import com.bancodobrasil.residencia.model.ChatRequest;
+import com.bancodobrasil.residencia.model.Message;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class AiService {
 
-  @Autowired
-  private EnvironmentalImpactService impactService;
+    private final TokenEstimationService tokenEstimationService;
+    private final EnvironmentalImpactService impactService;
 
-  public EnvironmentalImpactDTO simulateImpact(ChatRequest request) {
-    String promptText = "";
-    if (request.getMessages() != null && !request.getMessages().isEmpty()) {
-      promptText = request.getMessages().get(request.getMessages().size() - 1).getContent();
+    public AiService(TokenEstimationService tokenEstimationService,
+                     EnvironmentalImpactService impactService) {
+        this.tokenEstimationService = tokenEstimationService;
+        this.impactService = impactService;
     }
 
-    String modelName = request.getModel() != null ? request.getModel() : "gemini";
+    public ChatResponseDTO estimate(ChatRequest request) {
+        String prompt = extractPrompt(request);
 
-    return impactService.estimateFromPrompt(modelName, promptText);
-  }
+        if (prompt.isBlank()) {
+            throw new IllegalArgumentException("O prompt não pode ser vazio");
+        }
+
+        String model = request.getModel();
+        TokenUsageDTO usage = tokenEstimationService.estimate(model, prompt);
+        EnvironmentalImpactDTO impact = impactService.calculate(model, usage);
+
+        return new ChatResponseDTO(model, usage, impact);
+    }
+
+    private String extractPrompt(ChatRequest request) {
+        if (request.getMessages() == null) return "";
+
+        return request.getMessages().stream()
+                .map(Message::getContent)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining("\n"));
+    }
 }
