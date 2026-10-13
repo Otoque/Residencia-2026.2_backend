@@ -22,7 +22,7 @@ public class GptTokenizer implements Tokenizer {
     }
 
     @Override
-    public int countTokens(String text) {
+    public int countTokens(String modelName, String text) {
         if (text == null || text.isBlank()) return 0;
         return encoding.countTokens(text);
     }

@@ -14,8 +14,6 @@ public class GptCompletionEstimator implements CompletionTokenEstimator {
     public int estimateCompletionTokens(String prompt, int promptTokens) {
         String lower = prompt.toLowerCase();
 
-        // Heurística baseada em palavras-chave comuns no prompt.
-        // Ajuste esses multiplicadores conforme for coletando dados reais.
         if (contemAlguma(lower, "resuma", "liste", "sim ou não", "responda em uma palavra")) {
             return (int) Math.ceil(promptTokens * 0.5) + 20;
         }
@@ -28,7 +26,6 @@ public class GptCompletionEstimator implements CompletionTokenEstimator {
             return (int) Math.ceil(promptTokens * 2.5) + 150;
         }
 
-        // Caso padrão
         return (int) Math.ceil(promptTokens * 1.3) + 50;
     }
 

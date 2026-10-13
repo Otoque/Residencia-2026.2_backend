@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GeminiTokenizer implements Tokenizer {
 
-    // Google não publica uma lib Java offline confiável para o tokenizer deles.
-    // Por isso usamos uma heurística calibrada para português.
     private static final double CHARS_PER_TOKEN = 3.0;
 
     @Override
@@ -15,7 +13,7 @@ public class GeminiTokenizer implements Tokenizer {
     }
 
     @Override
-    public int countTokens(String text) {
+    public int countTokens(String modelName, String text) {
         if (text == null || text.isBlank()) return 0;
         return (int) Math.ceil(text.length() / CHARS_PER_TOKEN);
     }

@@ -15,4 +15,7 @@ public class ChatRequest {
   private String model;
   private List<Message> messages;
   private Double temperature;
+  private Integer promptTokens;
+  private Integer completionTokens;
+  private String completionText;
 }

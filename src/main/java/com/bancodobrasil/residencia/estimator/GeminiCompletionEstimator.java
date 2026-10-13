@@ -14,7 +14,6 @@ public class GeminiCompletionEstimator implements CompletionTokenEstimator {
     public int estimateCompletionTokens(String prompt, int promptTokens) {
         String lower = prompt.toLowerCase();
 
-        // Gemini tende a ser mais direto que o GPT em respostas médias.
         if (contemAlguma(lower, "resuma", "liste", "sim ou não")) {
             return (int) Math.ceil(promptTokens * 0.4) + 15;
         }
