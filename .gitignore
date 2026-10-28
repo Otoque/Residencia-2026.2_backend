@@ -35,3 +35,6 @@ build/
 ### DEV ###
 .env
 
+
+### Banco local ###
+data/

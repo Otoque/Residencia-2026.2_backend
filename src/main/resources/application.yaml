@@ -1,7 +1,28 @@
 spring:
   application:
     name: residencia
+  datasource:
+    # H2 em arquivo (pasta ./data). Para PostgreSQL: jdbc:postgresql://localhost:5432/residencia
+    url: ${DB_URL:jdbc:h2:file:./data/residencia}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
 
 ai:
   api:
     key: ${API_KEY_AI}
+
+security:
+  jwt:
+    # mínimo 32 caracteres. Gere com: openssl rand -base64 48
+    secret: ${JWT_SECRET}
+    expiration-minutes: 60
+  auth:
+    max-attempts: 5
+    lock-minutes: 15
+  cors:
+    # origens do front, separadas por vírgula
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:4200}
