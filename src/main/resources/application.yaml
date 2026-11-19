@@ -1,6 +1,9 @@
 spring:
   application:
     name: residencia
+    
+server:
+  port: ${PORT:8080}
 
 ai:
   api:
