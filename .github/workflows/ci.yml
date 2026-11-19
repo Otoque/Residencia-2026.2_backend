@@ -17,7 +17,7 @@ jobs:
       - name: Configurar JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21' # Ajuste para a versão do Java definida no seu pom.xml (ex.: 17 ou 21)
+          java-version: '25' # Ajuste para a versão do Java definida no seu pom.xml (ex.: 17 ou 21)
           distribution: 'temurin'
           cache: 'maven'
 
