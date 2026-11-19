@@ -1,0 +1,25 @@
+name: Java CI
+
+on:
+  push:
+    branches: [ "main", "master", "teste/deploy" ]
+  pull_request:
+    branches: [ "main", "master", "teste/deploy" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21' # Ajuste para a versão do Java definida no seu pom.xml (ex.: 17 ou 21)
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Executar testes e build com Maven
+        run: ./mvnw -B clean verify
